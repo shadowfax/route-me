@@ -1,7 +1,4 @@
 /* print row coefficients of Tseries structure */
-#ifndef lint
-static const char SCCSID[]="@(#)p_series.c	4.6	95/08/19	GIE	REL";
-#endif
 #include "projects.h"
 #include <stdio.h>
 #include <string.h>
@@ -18,11 +15,13 @@ p_series(Tseries *T, FILE *file, char *fmt) {
 	fprintf(file, "u: %d\n", T->mu+1);
 	for (i = 0; i <= T->mu; ++i)
 		if (T->cu[i].m) {
-			L = fprintf(file, "%d %d", i, T->cu[i].m);
+			//fprintf(file, "%d %d%n", i, T->cu[i].m, &L);
+            L = fprintf(file, "%d %d", i, T->cu[i].m);
 			n = 0;
 			for (j = 0; j < T->cu[i].m; ++j) {
 				if ((L += n) > CUT)
-					L = fprintf(file, "\n ");
+					//fprintf(file, "\n %n", &L);
+                    L = fprintf(file, "\n ");
 				fprintf(file, format, T->cu[i].c[j], &n);
 			}
 			fputc('\n', file);
@@ -30,11 +29,13 @@ p_series(Tseries *T, FILE *file, char *fmt) {
 	fprintf(file, "v: %d\n", T->mv+1);
 	for (i = 0; i <= T->mv; ++i)
 		if (T->cv[i].m) {
-			L = fprintf(file, "%d %d", i, T->cv[i].m);
+			//fprintf(file, "%d %d%n", i, T->cv[i].m, &L);
+            L = fprintf(file, "%d %d", i, T->cv[i].m);
 			n = 0;
 			for (j = 0; j < T->cv[i].m; ++j) {
 				if ((L += n) > 60)
-					L = fprintf(file, "\n ");
+					//fprintf(file, "\n %n", &L);
+                    L = fprintf(file, "\n ");
 				fprintf(file, format, T->cv[i].c[j], &n);
 			}
 			fputc('\n', file);
