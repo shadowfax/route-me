@@ -30,7 +30,7 @@ Installing
 As Route-Me is undergoing some significant changes, the recommended course of
 action is to clone a copy of the repository:
 
-      git://github.com/route-me/route-me.git
+      git://github.com/shadowfax/route-me.git
 
 Or, [download the trunk][dl].
 
@@ -41,7 +41,7 @@ There are three subdirectories - MapView, Proj4, and samples. Proj4 is a support
 See LicenseRouteMe.txt for license details. In any app that uses the Route-Me library, include the following text on your "preferences" or "about" screen: "Uses Route-Me map library, (c) 2008-2010 Route-Me Contributors". Your data provider will have additional attribution requirements.
 
 
-   [dl]: http://github.com/route-me/route-me/zipball/master
+   [dl]: https://github.com/shadowfax/route-me/zipball/master
    
    
 News, Support and Contributing
