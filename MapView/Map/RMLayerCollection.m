@@ -34,14 +34,14 @@
 
 - (id)initForContents: (RMMapContents *)_contents
 {
-	if (![super init])
-		return nil;
-
-	sublayers = [[NSMutableArray alloc] init];
-	mapContents = _contents;
-	self.masksToBounds = YES;
-	rotationTransform = CGAffineTransformIdentity;
-	return self;
+    self = [super init];
+    if (self) {
+        sublayers = [[NSMutableArray alloc] init];
+        mapContents = _contents;
+        self.masksToBounds = YES;
+        rotationTransform = CGAffineTransformIdentity;
+    }
+    return self;
 }
 
 - (void) dealloc 

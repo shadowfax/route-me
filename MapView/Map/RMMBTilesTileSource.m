@@ -43,19 +43,20 @@
 
 - (id)initWithTileSetURL:(NSURL *)tileSetURL
 {
-	if ( ! [super init])
-		return nil;
-	
-	tileProjection = [[RMFractalTileProjection alloc] initFromProjection:[self projection] 
-                                                          tileSideLength:kMBTilesDefaultTileSize 
-                                                                 maxZoom:kMBTilesDefaultMaxTileZoom 
-                                                                 minZoom:kMBTilesDefaultMinTileZoom];
-	
-    db = [[FMDatabase databaseWithPath:[tileSetURL relativePath]] retain];
-    
-    if ( ! [db open])
-        return nil;
-    
+    self = [super init];
+	if (self) {
+        tileProjection = [[RMFractalTileProjection alloc] initFromProjection:[self projection] 
+                                                              tileSideLength:kMBTilesDefaultTileSize 
+                                                                     maxZoom:kMBTilesDefaultMaxTileZoom 
+                                                                     minZoom:kMBTilesDefaultMinTileZoom];
+        
+        db = [[FMDatabase databaseWithPath:[tileSetURL relativePath]] retain];
+        
+        if ( ! [db open]) {
+            [self release];
+            return nil;
+        }
+    }
 	return self;
 }
 

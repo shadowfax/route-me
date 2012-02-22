@@ -32,17 +32,19 @@
 
 - (id) init
 {
-	if (![super init])
-		return nil;
-	
+    self = [super init];
+    if (self) {
+        // Custom initialization
+    }
 	return self;
 }
 
 - (id)initWithLayer:(id)layer
 {
-	if (![super initWithLayer:layer])
-		return nil;
-	
+    self = [super initWithLayer:layer];
+    if (self) {
+        // Custom initialization
+    }
 	return self;
 }
 

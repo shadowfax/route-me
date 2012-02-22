@@ -33,21 +33,20 @@
 
 -(id) initFrom: (RMProjection*)_source To: (RMProjection*)_dest
 {
-	if (![super init])
-		return nil;
-	
-	source = [_source retain];
-	destination = [_dest retain];
-	
-	is_source_latlong = pj_is_latlong(source.internalProjection);
-	is_dest_latlong = pj_is_latlong(destination.internalProjection);
-	
-	if (source == nil || destination == nil)
-	{
-		[self release];
-		return nil;
-	}
-	
+    self = [super init];
+    if (self) {
+        source = [_source retain];
+        destination = [_dest retain];
+        
+        is_source_latlong = pj_is_latlong(source.internalProjection);
+        is_dest_latlong = pj_is_latlong(destination.internalProjection);
+        
+        if (source == nil || destination == nil)
+        {
+            [self release];
+            return nil;
+        }
+    }
 	return self;
 }
 

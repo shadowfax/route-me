@@ -44,23 +44,23 @@
 
 -(id) initWithDatabase: (NSString*)path
 {
-	if (![super init])
-		return nil;
-
-	RMLog(@"Opening database at %@", path);
-	
-	db = [[FMDatabase alloc] initWithPath:path];
-	if (![db open])
-	{
-		RMLog(@"Could not connect to database - %@", [db lastErrorMessage]);
-		return nil;
-	}
-	
-	[db setCrashOnErrors:TRUE];
+    self = [super init];
+    if (self) {
+        RMLog(@"Opening database at %@", path);
+        
+        db = [[FMDatabase alloc] initWithPath:path];
+        if (![db open])
+        {
+            RMLog(@"Could not connect to database - %@", [db lastErrorMessage]);
+            [self release];
+            return nil;
+        }
+        
+        [db setCrashOnErrors:TRUE];
         [db setShouldCacheStatements:TRUE];
-	
-	[self configureDBForFirstUse];
-	
+        
+        [self configureDBForFirstUse];
+    }
 	return self;
 }
 

@@ -37,27 +37,27 @@
 
 - (id) initWithContent: (RMMapContents *)_contents
 {
-	if (![super initWithContent:_contents])
-		return nil;
-	
-	// NOTE: RMMapContents may still be initialising when this function
-	//       is called. Be careful using any of methods - they might return
-	//       strange data.
+    self = [super initWithContent:_contents];
+    if (self) {
+        // NOTE: RMMapContents may still be initialising when this function
+        //       is called. Be careful using any of methods - they might return
+        //       strange data.
+        
+        layer = [[CAScrollLayer layer] retain];
+        layer.anchorPoint = CGPointZero;
+        layer.masksToBounds = YES;
+        // If the frame is set incorrectly here, it will be fixed when setRenderer is called in RMMapContents
+        layer.frame = [content screenBounds];
+        
+        NSMutableDictionary *customActions = [NSMutableDictionary dictionaryWithDictionary:[layer actions]];
+        [customActions setObject:[NSNull null] forKey:@"sublayers"];
+        layer.actions = customActions;
+        
+        layer.delegate = self;
+        
+        tiles = [[NSMutableArray alloc] init];
 
-	layer = [[CAScrollLayer layer] retain];
-	layer.anchorPoint = CGPointZero;
-	layer.masksToBounds = YES;
-	// If the frame is set incorrectly here, it will be fixed when setRenderer is called in RMMapContents
-	layer.frame = [content screenBounds];
-	
-	NSMutableDictionary *customActions = [NSMutableDictionary dictionaryWithDictionary:[layer actions]];
-	[customActions setObject:[NSNull null] forKey:@"sublayers"];
-	layer.actions = customActions;
-	
-	layer.delegate = self;
-	
-	tiles = [[NSMutableArray alloc] init];
-
+    }
 	return self;
 }
 

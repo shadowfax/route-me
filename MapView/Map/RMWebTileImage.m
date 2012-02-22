@@ -40,21 +40,20 @@ NSString *RMWebTileImageNotificationErrorKey = @"RMWebTileImageNotificationError
 
 - (id) initWithTile: (RMTile)_tile FromURL:(NSString*)urlStr
 {
-	if (![super initWithTile:_tile])
-		return nil;
-	
-	url = [[NSURL alloc] initWithString:urlStr];
-
+    self = [super initWithTile:_tile];
+    if (self) {
+        url = [[NSURL alloc] initWithString:urlStr];
+        
         connection = nil;
 		
-	data =[[NSMutableData alloc] initWithCapacity:0];
-	
-	retries = kWebTileRetries;
-	
-	[[NSNotificationCenter defaultCenter] postNotificationName:RMTileRequested object:self];
-
-	[self requestTile];
-	
+        data =[[NSMutableData alloc] initWithCapacity:0];
+        
+        retries = kWebTileRetries;
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:RMTileRequested object:self];
+        
+        [self requestTile];
+    }
 	return self;
 }
 

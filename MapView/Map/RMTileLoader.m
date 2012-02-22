@@ -42,24 +42,24 @@
 
 -(id) init
 {
-	if (![self initWithContent: nil])
-		return nil;
-	
+    self = [self initWithContent:nil];
+    if (self) {
+        // Custom initialization
+    }
 	return self;
 }
 
 -(id) initWithContent: (RMMapContents *)_contents
 {
-	if (![super init])
-		return nil;
-	
-	content = _contents;
-	
-	[self clearLoadedBounds];
-	loadedTiles.origin.tile = RMTileDummy();
-	
-	suppressLoading = NO;
-	
+    self = [super init];
+    if (self) {
+        content = _contents;
+        
+        [self clearLoadedBounds];
+        loadedTiles.origin.tile = RMTileDummy();
+        
+        suppressLoading = NO;
+    }
 	return self;
 }
 

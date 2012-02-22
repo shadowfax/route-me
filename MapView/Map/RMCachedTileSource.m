@@ -38,13 +38,12 @@
 		return [_source retain];
 	}
 	
-	if (![super init])
-		return nil;
-	
-	tileSource = [_source retain];
-	
-	cache = [[RMTileCache alloc] initWithTileSource:tileSource];
-	
+    self = [super init];
+    if (self) {
+        tileSource = [_source retain];
+        
+        cache = [[RMTileCache alloc] initWithTileSource:tileSource];
+    }
 	return self;
 }
 

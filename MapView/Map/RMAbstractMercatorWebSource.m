@@ -37,16 +37,15 @@
 
 -(id) init
 {
-	if (![super init])
-		return nil;
-	
-	tileProjection = [[RMFractalTileProjection alloc] initFromProjection:[self projection] tileSideLength:kDefaultTileSize maxZoom:kDefaultMaxTileZoom minZoom:kDefaultMinTileZoom];
-	
-	networkOperations = TRUE;
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkOperationsNotification:) name:RMSuspendNetworkOperations object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkOperationsNotification:) name:RMResumeNetworkOperations object:nil];
-	
+    self = [super init];
+    if (self) {
+        tileProjection = [[RMFractalTileProjection alloc] initFromProjection:[self projection] tileSideLength:kDefaultTileSize maxZoom:kDefaultMaxTileZoom minZoom:kDefaultMinTileZoom];
+        
+        networkOperations = TRUE;
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkOperationsNotification:) name:RMSuspendNetworkOperations object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkOperationsNotification:) name:RMResumeNetworkOperations object:nil];
+    }
 	return self;
 }
 

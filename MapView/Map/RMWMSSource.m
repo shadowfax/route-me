@@ -37,23 +37,22 @@
 @synthesize wms;
 
 -(id) init 
-{ 
-    if (![super init]) 
-        return nil; 
-    
-    // The code below is based on the followin URL, but fixed for this use
-    // http://groups.google.com/group/route-me-map/browse_thread/thread/b6aa3757d46055aa/c93e7b0c861973e5?lnk=gst&q=900913#c93e7b0c861973e5
-    
-    initialResolution = 2 * M_PI * 6378137 / kDefaultTileSize; 
-    originShift = 2 * M_PI * 6378137 / 2.0; 
-    
-    [self setMinZoom:1.0];
-    [self setMaxZoom:18.0];
-
-    // some default values
-    [self setName:@"wms"];
-    [self setUniqueTilecacheKey:@"wms"];
-    
+{
+    self = [super init];
+    if (self) {
+        // The code below is based on the followin URL, but fixed for this use
+        // http://groups.google.com/group/route-me-map/browse_thread/thread/b6aa3757d46055aa/c93e7b0c861973e5?lnk=gst&q=900913#c93e7b0c861973e5
+        
+        initialResolution = 2 * M_PI * 6378137 / kDefaultTileSize; 
+        originShift = 2 * M_PI * 6378137 / 2.0; 
+        
+        [self setMinZoom:1.0];
+        [self setMaxZoom:18.0];
+        
+        // some default values
+        [self setName:@"wms"];
+        [self setUniqueTilecacheKey:@"wms"];
+    }
     return self; 
 } 
 

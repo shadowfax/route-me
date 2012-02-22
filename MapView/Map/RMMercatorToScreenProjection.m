@@ -42,12 +42,14 @@
 
 - (id) initFromProjection: (RMProjection*) aProjection ToScreenBounds: (CGRect)aScreenBounds;
 {
-	if (![super init])
-		return nil;
-	screenBounds = aScreenBounds;
-	projection = [aProjection retain];
-	metersPerPixel = 1;
-	return self;
+    self = [super init];
+    if (self) {
+        screenBounds = aScreenBounds;
+        projection = [aProjection retain];
+        metersPerPixel = 1;
+
+    }
+    return self;
 }
 
 - (void) dealloc

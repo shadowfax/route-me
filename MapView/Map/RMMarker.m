@@ -66,16 +66,15 @@
 
 - (id) initWithUIImage: (UIImage*) image anchorPoint: (CGPoint) _anchorPoint
 {
-	if (![self init])
-		return nil;
-	
-	self.contents = (id)[image CGImage];
-	self.bounds = CGRectMake(0,0,image.size.width,image.size.height);
-	self.anchorPoint = _anchorPoint;
-	
-	self.masksToBounds = NO;
-	self.label = nil;
-	
+    self = [self init];
+    if (self) {
+        self.contents = (id)[image CGImage];
+        self.bounds = CGRectMake(0,0,image.size.width,image.size.height);
+        self.anchorPoint = _anchorPoint;
+        
+        self.masksToBounds = NO;
+        self.label = nil;
+    }	
 	return self;
 }
 

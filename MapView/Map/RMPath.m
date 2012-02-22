@@ -47,39 +47,38 @@
 
 - (id) initWithContents: (RMMapContents*)aContents
 {
-	if (![super init])
-		return nil;
-	
-	mapContents = aContents;
-
-	path = CGPathCreateMutable();
-	
-	lineWidth = kDefaultLineWidth;
-	drawingMode = kCGPathFillStroke;
-	lineCap = kCGLineCapButt;
-	lineJoin = kCGLineJoinMiter;
-	lineColor = [UIColor blackColor];
-	fillColor = [UIColor redColor];
-	_lineDashCount = 0;
-	_lineDashLengths = NULL;
-	_scaledLineDashLengths = NULL;
-	lineDashPhase = 0.0;
-	shadowBlur = 0.0;
-	shadowOffset = CGSizeMake(0, 0);
-    
-	self.masksToBounds = YES;
-	
-	scaleLineWidth = NO;
-	scaleLineDash = NO;
-	enableDragging = YES;
-	enableRotation = YES;
-	isFirstPoint = YES;
-	
-    if ( [self respondsToSelector:@selector(setContentsScale:)] )
-    {
-        [(id)self setValue:[[UIScreen mainScreen] valueForKey:@"scale"] forKey:@"contentsScale"];
+    self = [super init];
+    if (self) {
+        mapContents = aContents;
+        
+        path = CGPathCreateMutable();
+        
+        lineWidth = kDefaultLineWidth;
+        drawingMode = kCGPathFillStroke;
+        lineCap = kCGLineCapButt;
+        lineJoin = kCGLineJoinMiter;
+        lineColor = [UIColor blackColor];
+        fillColor = [UIColor redColor];
+        _lineDashCount = 0;
+        _lineDashLengths = NULL;
+        _scaledLineDashLengths = NULL;
+        lineDashPhase = 0.0;
+        shadowBlur = 0.0;
+        shadowOffset = CGSizeMake(0, 0);
+        
+        self.masksToBounds = YES;
+        
+        scaleLineWidth = NO;
+        scaleLineDash = NO;
+        enableDragging = YES;
+        enableRotation = YES;
+        isFirstPoint = YES;
+        
+        if ( [self respondsToSelector:@selector(setContentsScale:)] )
+        {
+            [(id)self setValue:[[UIScreen mainScreen] valueForKey:@"scale"] forKey:@"contentsScale"];
+        }
     }
-	
 	return self;
 }
 

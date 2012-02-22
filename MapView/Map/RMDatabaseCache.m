@@ -64,16 +64,16 @@
 
 -(id) initWithDatabase: (NSString*)path
 {
-	if (![super init])
-		return nil;
-	
-	
-	self.databasePath = path;
-	dao = [[RMTileCacheDAO alloc] initWithDatabase:path];
-
-	if (dao == nil)
-		return nil;
-	
+    self = [super init];
+    if (self) {
+        self.databasePath = path;
+        dao = [[RMTileCacheDAO alloc] initWithDatabase:path];
+        
+        if (dao == nil) {
+            [self release];
+            return nil;
+        }
+    }
 	return self;	
 }
 

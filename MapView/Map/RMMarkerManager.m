@@ -36,13 +36,12 @@
 
 - (id)initWithContents:(RMMapContents *)mapContents
 {
-	if (![super init])
-		return nil;
-	
-	contents = mapContents;
-	
-	rotationTransform = CGAffineTransformIdentity; 
-	
+    self = [super init];
+	if (self) {
+        contents = mapContents;
+        
+        rotationTransform = CGAffineTransformIdentity; 
+    }
 	return self;
 }
 
