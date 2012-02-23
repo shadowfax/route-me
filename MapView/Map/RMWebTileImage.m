@@ -35,16 +35,33 @@ NSString *RMWebTileImageErrorDomain = @"RMWebTileImageErrorDomain";
 NSString *RMWebTileImageHTTPResponseCodeKey = @"RMWebTileImageHTTPResponseCodeKey";
 NSString *RMWebTileImageNotificationErrorKey = @"RMWebTileImageNotificationErrorKey";
 
+static NSOperationQueue *_queue = nil;
 
 @implementation RMWebTileImage
 
++(void) initialize
+{
+    _queue = [[NSOperationQueue alloc] init];
+    [_queue setMaxConcurrentOperationCount: kMaxConcurrentConnections];
+}
+
 - (id) initWithTile: (RMTile)_tile FromURL:(NSString*)urlStr
 {
+<<<<<<< HEAD
     self = [super initWithTile:_tile];
     if (self) {
         url = [[NSURL alloc] initWithString:urlStr];
         
         connection = nil;
+=======
+	if (![super initWithTile:_tile])
+		return nil;
+	
+	url = [[NSURL alloc] initWithString:urlStr];
+
+
+    connectionOp = nil;
+>>>>>>> upstream/master
 		
         data =[[NSMutableData alloc] initWithCapacity:0];
         
@@ -73,12 +90,13 @@ NSString *RMWebTileImageNotificationErrorKey = @"RMWebTileImageNotificationError
 - (void) requestTile
 {
 	//RMLog(@"fetching: %@", url);
-	if(connection) // re-request
+	if(connectionOp) // re-request
 	{
 		//RMLog(@"Refetching: %@: %d", url, retries);
 		
-		[connection release];
-		connection = nil;
+        [connectionOp cancel];
+		[connectionOp release];
+		connectionOp = nil;
 
 		if(retries == 0) // No more retries
 		{
@@ -103,28 +121,30 @@ NSString *RMWebTileImageNotificationErrorKey = @"RMWebTileImageNotificationError
 - (void) startLoading:(NSTimer *)timer
 {
 	NSURLRequest *request = [NSURLRequest requestWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:30.0];
-	
-	connection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
-	
-	if (!connection)
+
+    connectionOp = [[RMURLConnectionOperation alloc] initWithRequest:request delegate:self];
+    
+	if (!connectionOp)
 	{
 		[super displayProxy:[RMTileProxy errorTile]];
 		[[NSNotificationCenter defaultCenter] postNotificationName:RMTileRetrieved object:self];
-	}
+	} else {
+        [_queue addOperation:connectionOp];
+    }
 }
 
 - (void) cancelLoading
 {
-	if (!connection)
+	if (!connectionOp)
 		return;
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:RMTileRetrieved object:self];
-	[connection cancel];
 	
-	[connection release];
-	connection = nil;
-	
-    if ( lastError ) [lastError release]; lastError = nil;
+    [connectionOp stop];	
+	[connectionOp release];
+	connectionOp = nil;
+    
+     if ( lastError ) [lastError release]; lastError = nil;
     
 	[super cancelLoading];
 }
@@ -145,6 +165,12 @@ NSString *RMWebTileImageNotificationErrorKey = @"RMWebTileImageNotificationError
 
 - (void)connection:(NSURLConnection *)_connection didReceiveResponse:(NSURLResponse *)response
 {
+    if ( ![NSThread isMainThread] ) {
+        // Perform this on the main thread
+        dispatch_sync(dispatch_get_main_queue(), ^{ [self connection:_connection didReceiveResponse:response]; });
+        return;
+    }
+    
 	int statusCode = NSURLErrorUnknown; // unknown
 
 	if([response isKindOfClass:[NSHTTPURLResponse class]])
@@ -210,7 +236,12 @@ NSString *RMWebTileImageNotificationErrorKey = @"RMWebTileImageNotificationError
 - (void)connection:(NSURLConnection *)_connection didFailWithError:(NSError *)error
 {
 	//RMLog(@"didFailWithError %@ %d %@", _connection, [error code], [error localizedDescription]);
-
+    if ( ![NSThread isMainThread] ) {
+        // Perform this on the main thread
+        dispatch_sync(dispatch_get_main_queue(), ^{ [self connection:_connection didFailWithError:error]; });
+        return;
+    }
+    
 	BOOL retry = FALSE;
 	
 	switch([error code])
@@ -244,7 +275,14 @@ NSString *RMWebTileImageNotificationErrorKey = @"RMWebTileImageNotificationError
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)_connection
 {
-	if ([data length] == 0) {
+    if ( ![NSThread isMainThread] ) {
+        // Perform this on the main thread
+        dispatch_sync(dispatch_get_main_queue(), ^{ [self connectionDidFinishLoading:_connection]; });
+        return;
+    }
+    
+	if ([data length] == 0) 
+    {
 		//RMLog(@"connectionDidFinishLoading %@ data size %d", _connection, [data length]);
         
         if ( lastError ) [lastError release];
@@ -262,8 +300,10 @@ NSString *RMWebTileImageNotificationErrorKey = @"RMWebTileImageNotificationError
 		data = nil;
 		[url release];
 		url = nil;
-		[connection release];
-		connection = nil;
+        [connectionOp stop];
+		[connectionOp release];
+		connectionOp = nil;
+ 
 		if ( lastError ) [lastError release]; lastError = nil;
         
 		[[NSNotificationCenter defaultCenter] postNotificationName:RMTileRetrieved object:self];

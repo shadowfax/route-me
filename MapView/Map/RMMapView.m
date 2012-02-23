@@ -193,6 +193,7 @@
 	
 	_delegateHasTapOnMarker = [(NSObject*) delegate respondsToSelector:@selector(tapOnMarker:onMap:)];
 	_delegateHasTapOnLabelForMarker = [(NSObject*) delegate respondsToSelector:@selector(tapOnLabelForMarker:onMap:)];
+	_delegateHasTapOnLabelForMarkerOnLayer = [(NSObject*) delegate respondsToSelector:@selector(tapOnLabelForMarker:onMap:onLayer:)];
 	
 	_delegateHasAfterMapTouch  = [(NSObject*) delegate respondsToSelector: @selector(afterMapTouch:)];
    
@@ -349,7 +350,7 @@
 			zRect.size.height = screenBounds.size.height * metersPerPixel;
 			 
 			//can zoom only if within bounds
-			canZoom= !(zRect.origin.northing < SWconstraint.northing || zRect.origin.northing+zRect.size.height> NEconstraint.northing ||
+			canZoom= zoomDelta > 0 || !(zRect.origin.northing < SWconstraint.northing || zRect.origin.northing+zRect.size.height> NEconstraint.northing ||
 			  zRect.origin.easting < SWconstraint.easting || zRect.origin.easting+zRect.size.width > NEconstraint.easting);
 				
 		}
@@ -586,10 +587,16 @@
 					if (_delegateHasTapOnLabelForMarker) {
 						[delegate tapOnLabelForMarker:(RMMarker*)superlayer onMap:self];
 					}
+                    if (_delegateHasTapOnLabelForMarkerOnLayer) {
+                        [delegate tapOnLabelForMarker:(RMMarker*)superlayer onMap:self onLayer:hit];
+                    }
 				} else if ([superlayer superlayer] != nil && [[superlayer superlayer] isKindOfClass: [RMMarker class]]) {
                                         if (_delegateHasTapOnLabelForMarker) {
                                                 [delegate tapOnLabelForMarker:(RMMarker*)[superlayer superlayer] onMap:self];
                                         } 
+                    if (_delegateHasTapOnLabelForMarkerOnLayer) {
+                        [delegate tapOnLabelForMarker:(RMMarker*)[superlayer superlayer] onMap:self onLayer:hit];
+                    }
 				} else if (_delegateHasSingleTapOnMap) {
 					[delegate singleTapOnMap: self At: [touch locationInView:self]];
 				}
