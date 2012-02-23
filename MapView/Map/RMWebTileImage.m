@@ -47,21 +47,11 @@ static NSOperationQueue *_queue = nil;
 
 - (id) initWithTile: (RMTile)_tile FromURL:(NSString*)urlStr
 {
-<<<<<<< HEAD
     self = [super initWithTile:_tile];
     if (self) {
         url = [[NSURL alloc] initWithString:urlStr];
         
-        connection = nil;
-=======
-	if (![super initWithTile:_tile])
-		return nil;
-	
-	url = [[NSURL alloc] initWithString:urlStr];
-
-
-    connectionOp = nil;
->>>>>>> upstream/master
+        connectionOp = nil;
 		
         data =[[NSMutableData alloc] initWithCapacity:0];
         
